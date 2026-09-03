@@ -28,6 +28,33 @@
   <button class="btn-primary" id="openCartBtn">Warenkorb ansehen</button>
 </div>
 
+<div class="modal-overlay hidden" id="itemModal">
+  <div class="modal">
+    <h3 id="itemModalName"></h3>
+    <div class="item-modal-price" id="itemModalPrice"></div>
+
+    <div id="itemModalSauceWrap" class="hidden">
+      <label>Soße</label>
+      <div class="sauce-chip-group" id="itemModalSauces"></div>
+    </div>
+
+    <div class="qty-row">
+      <span>Menge</span>
+      <div class="qty-controls">
+        <button type="button" id="itemModalMinus">−</button>
+        <span class="qty" id="itemModalQty">1</span>
+        <button type="button" id="itemModalPlus">+</button>
+      </div>
+    </div>
+
+    <label for="itemModalNote">Notiz (optional)</label>
+    <input type="text" id="itemModalNote" maxlength="120" placeholder="z. B. ohne Zwiebeln">
+
+    <button type="button" class="btn-full" id="itemModalConfirm">Zum Warenkorb hinzufügen</button>
+    <button type="button" class="btn-secondary" id="itemModalCancel">Abbrechen</button>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="cartModal">
   <div class="modal">
     <h3>Dein Warenkorb</h3>

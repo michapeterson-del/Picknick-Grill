@@ -1,19 +1,20 @@
 const state = {
   menu: [],
-  cart: new Map() // cartKey(name, sauce) -> { name, price, qty, note, sauce }
+  cart: new Map(), // cartKey(name, sauce, note) -> { name, price, qty, note, sauce }
+  itemModal: { item: null, qty: 1, sauce: '', note: '' }
 };
 
-function cartKey(name, sauce) {
-  return sauce ? `${name}__SAUCE__${sauce}` : name;
+function cartKey(name, sauce, note) {
+  return `${name}__${sauce || ''}__${note || ''}`;
 }
 
-function addToCart(item, sauce) {
-  const key = cartKey(item.name, sauce);
+function addToCart(item, sauce, qty, note) {
+  const key = cartKey(item.name, sauce, note);
   const existing = state.cart.get(key);
   if (existing) {
-    existing.qty += 1;
+    existing.qty += qty;
   } else {
-    state.cart.set(key, { name: item.name, price: item.price, qty: 1, note: '', sauce: sauce || '' });
+    state.cart.set(key, { name: item.name, price: item.price, qty, note: note || '', sauce: sauce || '' });
   }
 }
 
@@ -29,6 +30,10 @@ const CATEGORY_ICONS = {
 
 function money(n) {
   return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function escapeAttr(s) {
+  return s.replace(/"/g, '&quot;');
 }
 
 async function loadMenu() {
@@ -67,12 +72,6 @@ function renderPopular() {
     const imgTag = item.img
       ? `<img class="thumb" src="/img/${escapeAttr(item.img)}" alt="${escapeAttr(item.name)}" onerror="this.remove()">`
       : '';
-    const addControl = item.sauceOptions
-      ? `<select class="sauce-select-mini">
-          <option value="" selected disabled>Soße wählen</option>
-          ${item.sauceOptions.map((s) => `<option value="${escapeAttr(s)}">${s}</option>`).join('')}
-        </select>`
-      : `<button class="btn-add-mini">In den Warenkorb</button>`;
     card.innerHTML = `
       <div class="thumb-wrap">
         ${imgTag}
@@ -82,7 +81,7 @@ function renderPopular() {
       <div class="body">
         <div class="pname">${item.name}</div>
         <div class="pprice">${money(item.price)}</div>
-        ${addControl}
+        <button class="btn-add-mini">Zum Warenkorb hinzufügen</button>
       </div>
     `;
     if (item.img) {
@@ -91,22 +90,7 @@ function renderPopular() {
       img.addEventListener('load', () => fallback.remove());
       img.addEventListener('error', () => img.remove());
     }
-    if (item.sauceOptions) {
-      card.querySelector('.sauce-select-mini').onchange = (e) => {
-        const sauce = e.target.value;
-        if (!sauce) return;
-        addToCart(item, sauce);
-        e.target.value = '';
-        updateCartBar();
-        renderMenu();
-      };
-    } else {
-      card.querySelector('.btn-add-mini').onclick = () => {
-        addToCart(item, '');
-        updateCartBar();
-        renderMenu();
-      };
-    }
+    card.querySelector('.btn-add-mini').onclick = () => openItemModal(item);
     scroll.appendChild(card);
   });
 
@@ -132,81 +116,84 @@ function renderMenu() {
           <div class="name">${item.name}</div>
           <span class="price">${money(item.price)}</span>
         </div>
-        <div class="controls" data-name="${escapeAttr(item.name)}"></div>
+        <div class="controls"></div>
       `;
+      row.querySelector('.controls').innerHTML = `<button class="btn-add-full">Zum Warenkorb hinzufügen</button>`;
+      row.querySelector('.btn-add-full').onclick = () => openItemModal(item);
       section.appendChild(row);
-      const controlsEl = row.querySelector('.controls');
-      if (item.sauceOptions) {
-        renderSaucedItemControls(controlsEl, item);
-      } else {
-        renderItemControls(controlsEl, item);
-      }
     });
 
     main.appendChild(section);
   });
 }
 
-function escapeAttr(s) {
-  return s.replace(/"/g, '&quot;');
+// ---------- Artikel-Bottom-Sheet (Menge, Soße, Notiz) ----------
+
+function openItemModal(item) {
+  state.itemModal = {
+    item,
+    qty: 1,
+    sauce: item.sauceOptions ? item.sauceOptions[0] : '',
+    note: ''
+  };
+  renderItemModal();
+  document.getElementById('itemModal').classList.remove('hidden');
 }
 
-function renderItemControls(el, item) {
-  const inCart = state.cart.get(item.name);
-  if (!inCart) {
-    el.innerHTML = `<button class="btn-add" aria-label="Hinzufügen">+</button>`;
-    el.querySelector('.btn-add').onclick = () => {
-      addToCart(item, '');
-      renderItemControls(el, item);
-      updateCartBar();
-    };
+function closeItemModal() {
+  document.getElementById('itemModal').classList.add('hidden');
+}
+
+function renderItemModal() {
+  const { item, qty, sauce, note } = state.itemModal;
+  document.getElementById('itemModalName').textContent = item.name;
+  document.getElementById('itemModalPrice').textContent = money(item.price);
+  document.getElementById('itemModalQty').textContent = qty;
+  document.getElementById('itemModalNote').value = note;
+
+  const sauceWrap = document.getElementById('itemModalSauceWrap');
+  const sauceGroup = document.getElementById('itemModalSauces');
+  if (item.sauceOptions) {
+    sauceWrap.classList.remove('hidden');
+    sauceGroup.innerHTML = item.sauceOptions
+      .map(
+        (s) =>
+          `<button type="button" class="sauce-chip${s === sauce ? ' selected' : ''}" data-sauce="${escapeAttr(s)}">${s}</button>`
+      )
+      .join('');
+    sauceGroup.querySelectorAll('.sauce-chip').forEach((chip) => {
+      chip.onclick = () => {
+        state.itemModal.sauce = chip.dataset.sauce;
+        renderItemModal();
+      };
+    });
   } else {
-    el.innerHTML = `
-      <div class="qty-controls">
-        <button class="minus">−</button>
-        <span class="qty">${inCart.qty}</span>
-        <button class="plus">+</button>
-      </div>
-    `;
-    el.querySelector('.plus').onclick = () => {
-      inCart.qty += 1;
-      renderItemControls(el, item);
-      updateCartBar();
-    };
-    el.querySelector('.minus').onclick = () => {
-      inCart.qty -= 1;
-      if (inCart.qty <= 0) state.cart.delete(item.name);
-      renderItemControls(el, item);
-      updateCartBar();
-    };
+    sauceWrap.classList.add('hidden');
+    sauceGroup.innerHTML = '';
   }
 }
 
-function renderSaucedItemControls(el, item) {
-  el.innerHTML = `
-    <div class="sauce-picker">
-      <select class="sauce-select">
-        <option value="" selected disabled>Soße wählen</option>
-        ${item.sauceOptions.map((s) => `<option value="${escapeAttr(s)}">${s}</option>`).join('')}
-      </select>
-      <span class="sauce-added-hint"></span>
-    </div>
-  `;
-
-  const select = el.querySelector('.sauce-select');
-  const hint = el.querySelector('.sauce-added-hint');
-
-  select.onchange = (e) => {
-    const sauce = e.target.value;
-    if (!sauce) return;
-    addToCart(item, sauce);
-    updateCartBar();
-    select.value = '';
-    hint.textContent = `✓ ${sauce} hinzugefügt`;
-    hint.classList.add('show');
-    setTimeout(() => hint.classList.remove('show'), 1600);
-  };
-}
+document.getElementById('itemModalPlus').onclick = () => {
+  state.itemModal.qty += 1;
+  renderItemModal();
+};
+document.getElementById('itemModalMinus').onclick = () => {
+  if (state.itemModal.qty > 1) state.itemModal.qty -= 1;
+  renderItemModal();
+};
+document.getElementById('itemModalNote').oninput = (e) => {
+  state.itemModal.note = e.target.value;
+};
+document.getElementById('itemModalCancel').onclick = closeItemModal;
+document.getElementById('itemModal').onclick = (e) => {
+  if (e.target.id === 'itemModal') closeItemModal();
+};
+document.getElementById('itemModalConfirm').onclick = () => {
+  const { item, qty, sauce, note } = state.itemModal;
+  addToCart(item, sauce, qty, note.trim());
+  updateCartBar();
+  closeItemModal();
+};
 
 function cartTotal() {
   let total = 0;
@@ -253,7 +240,6 @@ function renderCartLines() {
     `;
     line.querySelector('.remove').onclick = () => {
       state.cart.delete(key);
-      renderMenu();
       updateCartBar();
     };
     line.querySelector('.line-note').oninput = (e) => {
