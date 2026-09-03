@@ -1,0 +1,12 @@
+Aktuell eingebundene Fotos:
+
+  hero.webp           -> Titelbild (Außenansicht Picknick-Grill)
+  gyrosteller.webp     -> Foto vom Gyrosteller / Grillplatte
+  gyros-pita.webp      -> Foto von der Gyros-Pita
+
+Weitere Gerichte lassen sich genauso hervorheben: in data/menu.json beim
+gewünschten Gericht "popular": true und "img": "dateiname.webp" (oder
+.jpg/.png) ergänzen, dann das Bild einfach hier in diesen Ordner legen.
+
+Fehlt ein Bild, zeigt die Website automatisch ein passendes Icon als
+Platzhalter an - es gibt also nie eine kaputte Seite.

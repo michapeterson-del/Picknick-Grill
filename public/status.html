@@ -33,6 +33,16 @@
   .order-lines { margin-top: 14px; font-size: 0.92rem; }
   .order-lines div { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f1e8dc; }
   a.back { display:block; text-align:center; margin-top:18px; color: var(--orange-dark); }
+  .code-note {
+    text-align: center;
+    background: #f4e9db;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    color: var(--charcoal-2);
+    margin-top: 6px;
+  }
+  .code-note b { font-size: 1rem; letter-spacing: 1px; color: var(--orange-dark); }
 </style>
 </head>
 <body>
@@ -57,6 +67,7 @@
 
   <div class="status-card" id="resultCard" style="display:none">
     <h3>Bestellung #<span id="rOrderNumber"></span></h3>
+    <div class="code-note">Deine Bestellnummer <b>#<span id="rOrderNumber2"></span></b> und dein Code <b id="rCode"></b> – bitte notieren, falls du die Seite später erneut aufrufen willst.</div>
     <div class="big-status" id="rStatus"></div>
     <div id="rExtra"></div>
     <div class="order-lines" id="rLines"></div>
@@ -107,6 +118,8 @@ function render(order) {
   document.getElementById('lookupCard').style.display = 'none';
   document.getElementById('resultCard').style.display = 'block';
   document.getElementById('rOrderNumber').textContent = order.orderNumber;
+  document.getElementById('rOrderNumber2').textContent = order.orderNumber;
+  document.getElementById('rCode').textContent = order.code;
 
   const info = statusLabels[order.status] || statusLabels.neu;
   const statusEl = document.getElementById('rStatus');

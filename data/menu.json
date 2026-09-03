@@ -74,13 +74,13 @@
   {
     "category": "Gyros",
     "items": [
-      { "name": "Gyrosteller komplett (mit Pommes, Krautsalat und Tzatziki)", "price": 11.60 },
+      { "name": "Gyrosteller komplett (mit Pommes, Krautsalat und Tzatziki)", "price": 11.60, "popular": true, "img": "gyrosteller.webp" },
       { "name": "Gyros Portion (nur Fleisch)", "price": 5.90 },
       { "name": "Gyros Portion groß (nur Fleisch)", "price": 7.20 },
       { "name": "Gyros Pommes", "price": 8.20 },
       { "name": "Gyros Pommes und Tzatziki überbacken", "price": 9.60 },
       { "name": "Gyros Pommes und Salat", "price": 10.50 },
-      { "name": "Gyros-Pita (Fladenbrot mit Krautsalat, Salat, Tzatziki, Tomate, Zwiebel)", "price": 5.80 },
+      { "name": "Gyros-Pita (Fladenbrot mit Krautsalat, Salat, Tzatziki, Tomate, Zwiebel)", "price": 5.80, "popular": true, "img": "gyros-pita.webp" },
       { "name": "Gyros mit Rahmsauce, Käse überbacken, dazu Pommes und Salat", "price": 11.40 },
       { "name": "Metaxa Gyros (mit Metaxasauce, Käse überbacken, Pommes und Salat)", "price": 11.40 }
     ]

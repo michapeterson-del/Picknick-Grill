@@ -3,6 +3,16 @@ const state = {
   cart: new Map() // name -> { name, price, qty }
 };
 
+const CATEGORY_ICONS = {
+  'Bratwurst, Pommes & Co': '🌭',
+  'Pommes Frites & Co': '🍟',
+  'Leckere Schnitzel': '🍽️',
+  'Hähnchengerichte': '🍗',
+  'Gyros': '🥙',
+  'Saucen': '🥫',
+  'Salate': '🥗'
+};
+
 function money(n) {
   return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
@@ -10,7 +20,68 @@ function money(n) {
 async function loadMenu() {
   const res = await fetch('/api/menu');
   state.menu = await res.json();
+  renderPopular();
   renderMenu();
+}
+
+function renderPopular() {
+  const popularItems = [];
+  state.menu.forEach((cat) => {
+    cat.items.forEach((item) => {
+      item._category = cat.category;
+      if (item.popular) popularItems.push(item);
+    });
+  });
+
+  const existing = document.getElementById('popularSection');
+  if (existing) existing.remove();
+  if (popularItems.length === 0) return;
+
+  const section = document.createElement('section');
+  section.className = 'popular-section';
+  section.id = 'popularSection';
+  section.innerHTML = `
+    <h2>⭐ Beliebte Gerichte</h2>
+    <p class="sub">Das bestellen unsere Kunden am liebsten</p>
+    <div class="popular-scroll"></div>
+  `;
+  const scroll = section.querySelector('.popular-scroll');
+
+  popularItems.forEach((item) => {
+    const card = document.createElement('div');
+    card.className = 'popular-card';
+    const imgTag = item.img
+      ? `<img class="thumb" src="/img/${escapeAttr(item.img)}" alt="${escapeAttr(item.name)}" onerror="this.remove()">`
+      : '';
+    card.innerHTML = `
+      <div class="thumb-wrap">
+        ${imgTag}
+        <div class="thumb-fallback">${CATEGORY_ICONS[item._category] || '🍴'}</div>
+        <span class="badge">Beliebt</span>
+      </div>
+      <div class="body">
+        <div class="pname">${item.name}</div>
+        <div class="pprice">${money(item.price)}</div>
+        <button class="btn-add-mini">In den Warenkorb</button>
+      </div>
+    `;
+    if (item.img) {
+      const img = card.querySelector('.thumb');
+      const fallback = card.querySelector('.thumb-fallback');
+      img.addEventListener('load', () => fallback.remove());
+      img.addEventListener('error', () => img.remove());
+    }
+    card.querySelector('.btn-add-mini').onclick = () => {
+      const inCart = state.cart.get(item.name);
+      if (inCart) inCart.qty += 1;
+      else state.cart.set(item.name, { name: item.name, price: item.price, qty: 1 });
+      updateCartBar();
+      renderMenu();
+    };
+    scroll.appendChild(card);
+  });
+
+  document.getElementById('menu').before(section);
 }
 
 function renderMenu() {
@@ -20,10 +91,11 @@ function renderMenu() {
     const section = document.createElement('section');
     section.className = 'category';
     const h2 = document.createElement('h2');
-    h2.textContent = cat.category;
+    h2.innerHTML = `<span class="cat-icon">${CATEGORY_ICONS[cat.category] || '🍴'}</span> ${cat.category}`;
     section.appendChild(h2);
 
     cat.items.forEach((item) => {
+      item._category = cat.category;
       const row = document.createElement('div');
       row.className = 'item';
       row.innerHTML = `

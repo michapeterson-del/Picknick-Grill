@@ -19,10 +19,26 @@ body {
 }
 
 header.site {
-  background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-2) 100%);
+  position: relative;
+  background: url('/img/hero.webp') center/cover no-repeat,
+              linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-2) 100%);
   color: #fff;
   padding: 20px 16px 24px;
   text-align: center;
+  overflow: hidden;
+}
+
+header.site::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(38,34,32,0.55) 0%, rgba(38,34,32,0.85) 100%);
+  z-index: 0;
+}
+
+header.site > * {
+  position: relative;
+  z-index: 1;
 }
 
 header.site h1 {
@@ -64,6 +80,106 @@ main {
   padding: 16px 12px 120px;
 }
 
+.popular-section {
+  margin: 4px 0 32px;
+}
+
+.popular-section h2 {
+  color: var(--charcoal);
+  font-size: 1.2rem;
+  margin: 0 0 4px;
+}
+
+.popular-section .sub {
+  color: var(--gray);
+  font-size: 0.85rem;
+  margin: 0 0 12px;
+}
+
+.popular-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.popular-card {
+  flex: 0 0 auto;
+  width: 168px;
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.popular-card .thumb-wrap {
+  position: relative;
+  width: 100%;
+  height: 110px;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+}
+
+.popular-card .thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.popular-card .thumb-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+}
+
+.popular-card .badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(38,34,32,0.85);
+  color: #ffcf9e;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.popular-card .body {
+  padding: 8px 10px 10px;
+}
+
+.popular-card .pname {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+  min-height: 2.5em;
+}
+
+.popular-card .pprice {
+  color: var(--orange-dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.popular-card .btn-add-mini {
+  margin-top: 8px;
+  width: 100%;
+  background: var(--orange);
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .category {
   margin-bottom: 28px;
 }
@@ -73,6 +189,13 @@ main {
   border-bottom: 2px solid var(--orange);
   padding-bottom: 6px;
   font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.category h2 .cat-icon {
+  font-size: 1.1rem;
 }
 
 .item {
