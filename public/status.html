@@ -147,8 +147,9 @@ function render(order) {
 
   const extra = document.getElementById('rExtra');
   extra.innerHTML = '';
-  if (order.status === 'neu' && order.wishTime) {
-    extra.innerHTML = `<p style="text-align:center;color:#888">Deine Wunschzeit: ${order.wishTime} Uhr</p>`;
+  if (order.status === 'neu') {
+    const wish = order.wishTime ? `${order.wishTime} Uhr` : 'So schnell wie möglich';
+    extra.innerHTML = `<p style="text-align:center;color:#888">Deine Wunschzeit: ${wish}</p>`;
   }
 
   const lines = document.getElementById('rLines');

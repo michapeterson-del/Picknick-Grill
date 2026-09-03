@@ -183,7 +183,7 @@ function orderCard(o) {
         <span class="nr">#${o.orderNumber}</span>
         <span class="time">${fmtTime(o.createdAt)}</span>
       </div>
-      <div class="order-customer">${o.customerName} · <a href="tel:${o.phone}">${o.phone}</a>${o.wishTime ? ` · Wunschzeit ${o.wishTime} Uhr` : ''}</div>
+      <div class="order-customer">${o.customerName} · <a href="tel:${o.phone}">${o.phone}</a> · Wunschzeit: ${o.wishTime ? `${o.wishTime} Uhr` : '<span class="asap">So schnell wie möglich</span>'}</div>
       <div class="order-items">${itemsHtml}
         <div style="font-weight:700;border-top:1px solid #eee;margin-top:4px;padding-top:4px"><span>Gesamt</span><span>${money(o.total)}</span></div>
       </div>
