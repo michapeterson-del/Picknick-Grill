@@ -43,6 +43,17 @@
     margin-top: 6px;
   }
   .code-note b { font-size: 1rem; letter-spacing: 1px; color: var(--orange-dark); }
+  .item-note { font-size: 0.78rem; color: #96631a; font-style: italic; display:block; }
+  .btn-cancel-order {
+    width: 100%;
+    margin-top: 16px;
+    padding: 11px;
+    background: #fbe4e0;
+    color: #a3311a;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
 </style>
 </head>
 <body>
@@ -71,6 +82,8 @@
     <div class="big-status" id="rStatus"></div>
     <div id="rExtra"></div>
     <div class="order-lines" id="rLines"></div>
+    <button type="button" class="btn-cancel-order" id="cancelBtn" style="display:none">Bestellung stornieren</button>
+    <div class="error-box" id="cancelError"></div>
     <a class="back" href="index.html">← Zurück zur Speisekarte</a>
   </div>
 </main>
@@ -87,7 +100,7 @@ function money(n) {
 
 const statusLabels = {
   neu: { text: '⏳ Deine Bestellung wurde übermittelt und wartet auf Bestätigung …', cls: 'st-neu' },
-  bestaetigt: { text: '✅ Bestätigt! Abholung um', cls: 'st-bestaetigt' },
+  bestaetigt: { text: '✅ Bestätigt! Abholung:', cls: 'st-bestaetigt' },
   fertig: { text: '🍽️ Fertig! Du kannst dein Essen jetzt abholen.', cls: 'st-fertig' },
   abgeholt: { text: '👍 Abgeholt – guten Appetit!', cls: 'st-abgeholt' },
   storniert: { text: '❌ Diese Bestellung wurde storniert. Bitte ruf uns an: 02264 201941', cls: 'st-storniert' }
@@ -125,8 +138,9 @@ function render(order) {
   const statusEl = document.getElementById('rStatus');
   statusEl.className = 'big-status ' + info.cls;
 
-  if (order.status === 'bestaetigt' && order.pickupTime) {
-    statusEl.innerHTML = `${info.text}<br><span class="pickup-time">${order.pickupTime} Uhr</span>`;
+  if (order.status === 'bestaetigt') {
+    const pickupText = order.pickupTime ? `${order.pickupTime} Uhr` : 'So schnell wie möglich';
+    statusEl.innerHTML = `${info.text}<br><span class="pickup-time">${pickupText}</span>`;
   } else {
     statusEl.textContent = info.text;
   }
@@ -139,14 +153,42 @@ function render(order) {
 
   const lines = document.getElementById('rLines');
   lines.innerHTML = order.items
-    .map((it) => `<div><span>${it.qty} × ${it.name}</span><span>${money(it.price * it.qty)}</span></div>`)
+    .map(
+      (it) => `<div><span>${it.qty} × ${it.name}${it.note ? `<span class="item-note">📝 ${it.note}</span>` : ''}</span><span>${money(it.price * it.qty)}</span></div>`
+    )
     .join('') + `<div style="font-weight:700;border-top:2px solid #333;margin-top:6px;padding-top:8px"><span>Gesamt</span><span>${money(order.total)}</span></div>`;
+
+  const cancelBtn = document.getElementById('cancelBtn');
+  cancelBtn.style.display = order.status === 'neu' || order.status === 'bestaetigt' ? 'block' : 'none';
 
   if (pollTimer) clearInterval(pollTimer);
   if (order.status === 'neu' || order.status === 'bestaetigt') {
     pollTimer = setInterval(fetchStatus, 6000);
   }
 }
+
+document.getElementById('cancelBtn').onclick = async () => {
+  const cancelError = document.getElementById('cancelError');
+  cancelError.classList.remove('show');
+  if (!confirm('Bestellung wirklich stornieren?')) return;
+  try {
+    const res = await fetch('/api/orders/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNumber: currentNr, code: currentCode })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      cancelError.textContent = data.error || 'Stornieren nicht möglich.';
+      cancelError.classList.add('show');
+      return;
+    }
+    render(data);
+  } catch (e) {
+    cancelError.textContent = 'Verbindung fehlgeschlagen.';
+    cancelError.classList.add('show');
+  }
+};
 
 document.getElementById('lookupForm').onsubmit = (e) => {
   e.preventDefault();

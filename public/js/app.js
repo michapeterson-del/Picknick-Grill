@@ -122,7 +122,7 @@ function renderItemControls(el, item) {
   if (!inCart) {
     el.innerHTML = `<button class="btn-add" aria-label="Hinzufügen">+</button>`;
     el.querySelector('.btn-add').onclick = () => {
-      state.cart.set(item.name, { name: item.name, price: item.price, qty: 1 });
+      state.cart.set(item.name, { name: item.name, price: item.price, qty: 1, note: '' });
       renderItemControls(el, item);
       updateCartBar();
     };
@@ -181,16 +181,22 @@ function renderCartLines() {
   }
   state.cart.forEach((it) => {
     const line = document.createElement('div');
-    line.className = 'cart-line';
+    line.className = 'cart-line-block';
     line.innerHTML = `
-      <span class="name">${it.qty} × ${it.name}</span>
-      <span class="line-total">${money(it.price * it.qty)}</span>
-      <button class="remove" aria-label="Entfernen">×</button>
+      <div class="cart-line">
+        <span class="name">${it.qty} × ${it.name}</span>
+        <span class="line-total">${money(it.price * it.qty)}</span>
+        <button class="remove" aria-label="Entfernen">×</button>
+      </div>
+      <input type="text" class="line-note" maxlength="120" placeholder="Notiz zu diesem Artikel, z. B. ohne Zwiebeln" value="${escapeAttr(it.note || '')}">
     `;
     line.querySelector('.remove').onclick = () => {
       state.cart.delete(it.name);
       renderMenu();
       updateCartBar();
+    };
+    line.querySelector('.line-note').oninput = (e) => {
+      it.note = e.target.value;
     };
     container.appendChild(line);
   });
@@ -229,7 +235,8 @@ async function submitOrder(e) {
 
   const items = Array.from(state.cart.values()).map((it) => ({
     name: it.name,
-    qty: it.qty
+    qty: it.qty,
+    note: (it.note || '').trim()
   }));
 
   const btn = document.getElementById('submitBtn');

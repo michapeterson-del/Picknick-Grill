@@ -338,6 +338,24 @@ button {
   padding: 0 6px;
 }
 
+.cart-line-block {
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+.cart-line-block .cart-line {
+  border-bottom: none;
+  padding: 0 0 4px;
+}
+.cart-line-block .line-note {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #e2d8c9;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  background: #fdfaf5;
+}
+
 .total-row {
   display: flex;
   justify-content: space-between;

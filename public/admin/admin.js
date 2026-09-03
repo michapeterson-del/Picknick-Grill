@@ -66,28 +66,38 @@ function render(orders) {
   });
 }
 
+function pickupLabel(o) {
+  return o.pickupTime ? `${o.pickupTime} Uhr` : 'So schnell wie möglich';
+}
+
 function orderCard(o) {
   const itemsHtml = o.items
-    .map((it) => `<div><span>${it.qty} × ${it.name}</span><span>${money(it.price * it.qty)}</span></div>`)
+    .map(
+      (it) => `<div>
+        <span>${it.qty} × ${it.name}${it.note ? `<br><span class="item-note">📝 ${it.note}</span>` : ''}</span>
+        <span>${money(it.price * it.qty)}</span>
+      </div>`
+    )
     .join('');
 
   let actions = '';
   if (o.status === 'neu') {
     actions = `
       <input type="time" class="pickup-input" value="${o.wishTime || ''}">
+      <div class="hint-inline">Leer lassen = "So schnell wie möglich"</div>
       <button class="btn-confirm">Bestätigen</button>
       <button class="btn-cancel">Stornieren</button>
     `;
   } else if (o.status === 'bestaetigt') {
     actions = `
-      <span class="pickup-shown">Abholung: ${o.pickupTime} Uhr</span>
+      <span class="pickup-shown">Abholung: ${pickupLabel(o)}</span>
       <button class="btn-ready">Fertig gemeldet</button>
       <button class="btn-picked">Abgeholt</button>
       <button class="btn-cancel">Stornieren</button>
     `;
   } else if (o.status === 'fertig') {
     actions = `
-      <span class="pickup-shown">Abholung: ${o.pickupTime} Uhr</span>
+      <span class="pickup-shown">Abholung: ${pickupLabel(o)}</span>
       <button class="btn-picked">Abgeholt</button>
     `;
   } else if (o.status === 'abgeholt') {
@@ -113,10 +123,6 @@ function orderCard(o) {
 }
 
 async function confirmOrder(id, pickupTime) {
-  if (!pickupTime) {
-    alert('Bitte eine Abholzeit angeben.');
-    return;
-  }
   await fetch(`/admin/api/orders/${id}/confirm`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

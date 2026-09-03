@@ -52,7 +52,7 @@ app.post('/api/orders', (req, res) => {
     if (price === undefined) {
       return res.status(400).json({ error: `Unbekannter Artikel: ${raw.name}` });
     }
-    cleanItems.push({ name: raw.name, price, qty });
+    cleanItems.push({ name: raw.name, price, qty, note: (raw.note || '').trim().slice(0, 120) });
   }
 
   const order = store.createOrder({
@@ -80,6 +80,24 @@ app.get('/api/orders/lookup', (req, res) => {
     return res.status(404).json({ error: 'Bestellung nicht gefunden.' });
   }
   res.json(order);
+});
+
+app.post('/api/orders/cancel', (req, res) => {
+  const { orderNumber, code } = req.body || {};
+  if (!orderNumber || !code) {
+    return res.status(400).json({ error: 'Bestellnummer und Code erforderlich.' });
+  }
+  const order = store.findOrder(orderNumber, code);
+  if (!order) {
+    return res.status(404).json({ error: 'Bestellung nicht gefunden.' });
+  }
+  if (order.status !== 'neu' && order.status !== 'bestaetigt') {
+    return res.status(400).json({
+      error: 'Diese Bestellung kann nicht mehr storniert werden. Bitte ruf uns an: 02264 201941'
+    });
+  }
+  const updated = store.updateOrder(order.id, { status: 'storniert' });
+  res.json(updated);
 });
 
 // ---------- Admin auth ----------
@@ -114,12 +132,10 @@ app.get('/admin/api/orders', requireAuth, (req, res) => {
 
 app.post('/admin/api/orders/:id/confirm', requireAuth, (req, res) => {
   const { pickupTime } = req.body || {};
-  if (!pickupTime || !pickupTime.trim()) {
-    return res.status(400).json({ error: 'Bitte eine Abholzeit angeben.' });
-  }
+  // Leere Abholzeit ist erlaubt -> Kunde sieht "So schnell wie möglich".
   const order = store.updateOrder(req.params.id, {
     status: 'bestaetigt',
-    pickupTime: pickupTime.trim()
+    pickupTime: (pickupTime || '').trim()
   });
   if (!order) return res.status(404).json({ error: 'Bestellung nicht gefunden.' });
   res.json(order);
