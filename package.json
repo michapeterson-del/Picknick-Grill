@@ -19,7 +19,6 @@
   "homepage": "https://github.com/michapeterson-del/Picknick-Grill#readme",
   "dependencies": {
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "express-session": "^1.19.0"
+    "express": "^5.2.1"
   }
 }

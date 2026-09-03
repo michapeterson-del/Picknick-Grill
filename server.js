@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const session = require('express-session');
+const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const store = require('./data/store');
@@ -10,20 +10,54 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'picknick2024';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'change-me-in-.env';
+const AUTH_COOKIE = 'admin_auth';
+const AUTH_MAX_AGE = 1000 * 60 * 60 * 24 * 30; // 30 Tage
 
 const menu = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'menu.json'), 'utf8'));
 const menuByName = new Map();
 menu.forEach((cat) => cat.items.forEach((it) => menuByName.set(it.name, it.price)));
 
 app.use(express.json());
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 8 }
-  })
-);
+
+// Anmeldung als signiertes Cookie statt Server-Sitzung: übersteht Neustarts
+// des Servers (z. B. bei jedem Deploy oder wenn der Free-Plan aus Inaktivität
+// aufwacht), ohne dass Admins ständig neu ausgeloggt werden.
+function sign(value) {
+  return crypto.createHmac('sha256', SESSION_SECRET).update(value).digest('hex');
+}
+
+function createAuthToken() {
+  const value = `admin.${Date.now() + AUTH_MAX_AGE}`;
+  return `${value}.${sign(value)}`;
+}
+
+function verifyAuthToken(token) {
+  if (!token) return false;
+  const lastDot = token.lastIndexOf('.');
+  if (lastDot === -1) return false;
+  const value = token.slice(0, lastDot);
+  const signature = token.slice(lastDot + 1);
+  const expected = sign(value);
+  const sigBuf = Buffer.from(signature);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+    return false;
+  }
+  const [role, expiresStr] = value.split('.');
+  return role === 'admin' && Date.now() <= parseInt(expiresStr, 10);
+}
+
+function parseCookies(req) {
+  const cookies = {};
+  const header = req.headers.cookie;
+  if (!header) return cookies;
+  header.split(';').forEach((pair) => {
+    const idx = pair.indexOf('=');
+    if (idx === -1) return;
+    cookies[pair.slice(0, idx).trim()] = decodeURIComponent(pair.slice(idx + 1).trim());
+  });
+  return cookies;
+}
 
 // ---------- Public API ----------
 
@@ -103,25 +137,32 @@ app.post('/api/orders/cancel', (req, res) => {
 // ---------- Admin auth ----------
 
 function requireAuth(req, res, next) {
-  if (req.session && req.session.isAdmin) return next();
+  const cookies = parseCookies(req);
+  if (verifyAuthToken(cookies[AUTH_COOKIE])) return next();
   res.status(401).json({ error: 'Nicht angemeldet.' });
 }
 
 app.post('/admin/login', (req, res) => {
   const { password } = req.body || {};
   if (password && password === ADMIN_PASSWORD) {
-    req.session.isAdmin = true;
+    res.cookie(AUTH_COOKIE, createAuthToken(), {
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: AUTH_MAX_AGE
+    });
     return res.json({ ok: true });
   }
   res.status(401).json({ error: 'Falsches Passwort.' });
 });
 
 app.post('/admin/logout', (req, res) => {
-  req.session.destroy(() => res.json({ ok: true }));
+  res.clearCookie(AUTH_COOKIE);
+  res.json({ ok: true });
 });
 
 app.get('/admin/api/session', (req, res) => {
-  res.json({ isAdmin: !!(req.session && req.session.isAdmin) });
+  const cookies = parseCookies(req);
+  res.json({ isAdmin: verifyAuthToken(cookies[AUTH_COOKIE]) });
 });
 
 // ---------- Admin API ----------
