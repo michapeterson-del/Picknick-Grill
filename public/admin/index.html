@@ -49,13 +49,25 @@
   .empty { text-align:center; color:var(--gray); padding:40px 0; }
   .item-note { font-size:0.78rem; color:#96631a; font-style:italic; }
   .hint-inline { flex-basis:100%; font-size:0.75rem; color:var(--gray); margin:-4px 0 2px; }
+  .topbar-actions { display:flex; gap:8px; align-items:center; }
+  #notifBtn.on { background: var(--green); color:#fff; border-color: var(--green); }
+  .new-order-banner {
+    display:none;
+    max-width:720px; margin:0 auto; padding:10px 16px;
+    background:#e0a03a; color:#fff; text-align:center; font-weight:700; font-size:0.9rem;
+    border-radius:0 0 12px 12px;
+  }
 </style>
 </head>
 <body>
 <div class="topbar">
   <h2>🔥 Bestellungen</h2>
-  <button id="logoutBtn">Abmelden</button>
+  <div class="topbar-actions">
+    <button id="notifBtn">🔔 Ton aktivieren</button>
+    <button id="logoutBtn">Abmelden</button>
+  </div>
 </div>
+<div class="new-order-banner" id="newOrderBanner"></div>
 <div class="filters" id="filters">
   <button data-f="offen" class="active">Offen</button>
   <button data-f="alle">Alle</button>

@@ -1,5 +1,68 @@
 let filter = 'offen';
 let pollTimer = null;
+let knownOrderIds = null; // null = noch nicht initialisiert (erster Ladevorgang alarmiert nicht)
+let audioCtx = null;
+const originalTitle = document.title;
+let titleFlashTimer = null;
+
+function beep() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  [0, 0.18].forEach((offset, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = i === 0 ? 880 : 1046.5;
+    gain.gain.setValueAtTime(0.0001, now + offset);
+    gain.gain.linearRampToValueAtTime(0.35, now + offset + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.16);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now + offset);
+    osc.stop(now + offset + 0.18);
+  });
+}
+
+function flashTitle() {
+  if (titleFlashTimer) return;
+  let on = false;
+  titleFlashTimer = setInterval(() => {
+    document.title = on ? originalTitle : '🆕 Neue Bestellung!';
+    on = !on;
+  }, 1200);
+}
+
+function stopFlashTitle() {
+  if (titleFlashTimer) {
+    clearInterval(titleFlashTimer);
+    titleFlashTimer = null;
+  }
+  document.title = originalTitle;
+}
+
+function showBanner(newOrders) {
+  const banner = document.getElementById('newOrderBanner');
+  const names = newOrders.map((o) => `#${o.orderNumber}`).join(', ');
+  banner.textContent = `🆕 Neue Bestellung ${names} eingegangen!`;
+  banner.style.display = 'block';
+  banner.onclick = () => {
+    banner.style.display = 'none';
+    stopFlashTitle();
+  };
+}
+
+function alertNewOrders(newOrders) {
+  beep();
+  flashTitle();
+  showBanner(newOrders);
+  if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    newOrders.forEach((o) => {
+      new Notification(`Neue Bestellung #${o.orderNumber}`, {
+        body: `${o.customerName} · ${money(o.total)}`,
+        tag: `order-${o.id}`
+      });
+    });
+  }
+}
 
 function money(n) {
   return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
@@ -27,6 +90,14 @@ async function loadOrders() {
     return;
   }
   const orders = await res.json();
+
+  const currentIds = new Set(orders.map((o) => o.id));
+  if (knownOrderIds !== null) {
+    const newOnes = orders.filter((o) => o.status === 'neu' && !knownOrderIds.has(o.id));
+    if (newOnes.length > 0) alertNewOrders(newOnes);
+  }
+  knownOrderIds = currentIds;
+
   render(orders);
 }
 
@@ -143,6 +214,26 @@ async function setStatus(id, status) {
 document.getElementById('logoutBtn').onclick = async () => {
   await fetch('/admin/logout', { method: 'POST' });
   window.location.href = 'login.html';
+};
+
+document.getElementById('notifBtn').onclick = async () => {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+  beep();
+
+  const btn = document.getElementById('notifBtn');
+  if (typeof Notification !== 'undefined') {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      btn.textContent = '🔔 Benachrichtigungen an';
+      btn.classList.add('on');
+      return;
+    }
+  }
+  btn.textContent = '🔔 Ton an';
+  btn.classList.add('on');
 };
 
 document.querySelectorAll('#filters button').forEach((btn) => {
