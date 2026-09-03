@@ -15,7 +15,13 @@ const AUTH_MAX_AGE = 1000 * 60 * 60 * 24 * 30; // 30 Tage
 
 const menu = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'menu.json'), 'utf8'));
 const menuByName = new Map();
-menu.forEach((cat) => cat.items.forEach((it) => menuByName.set(it.name, it.price)));
+const sauceOptionsByName = new Map();
+menu.forEach((cat) =>
+  cat.items.forEach((it) => {
+    menuByName.set(it.name, it.price);
+    if (it.sauceOptions) sauceOptionsByName.set(it.name, it.sauceOptions);
+  })
+);
 
 app.use(express.json());
 
@@ -86,7 +92,12 @@ app.post('/api/orders', (req, res) => {
     if (price === undefined) {
       return res.status(400).json({ error: `Unbekannter Artikel: ${raw.name}` });
     }
-    cleanItems.push({ name: raw.name, price, qty, note: (raw.note || '').trim().slice(0, 120) });
+    const sauce = (raw.sauce || '').trim().slice(0, 40);
+    const allowedSauces = sauceOptionsByName.get(raw.name);
+    if (sauce && (!allowedSauces || !allowedSauces.includes(sauce))) {
+      return res.status(400).json({ error: `Ungültige Soße für ${raw.name}` });
+    }
+    cleanItems.push({ name: raw.name, price, qty, note: (raw.note || '').trim().slice(0, 120), sauce });
   }
 
   const order = store.createOrder({

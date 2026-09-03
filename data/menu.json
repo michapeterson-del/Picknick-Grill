@@ -2,121 +2,618 @@
   {
     "category": "Bratwurst, Pommes & Co",
     "items": [
-      { "name": "Bratwurst", "price": 3.00 },
-      { "name": "Bratwurst mit Pommes", "price": 5.00 },
-      { "name": "Currywurst", "price": 3.50 },
-      { "name": "Currywurst mit Pommes", "price": 5.80 },
-      { "name": "Paprikawurst", "price": 3.70 },
-      { "name": "Paprikawurst mit Pommes", "price": 6.00 },
-      { "name": "Jägerwurst", "price": 4.00 },
-      { "name": "Jägerwurst mit Pommes", "price": 6.30 },
-      { "name": "Schlemmerwurst", "price": 7.20 },
-      { "name": "Schlemmerwurst mit Currysauce, glasierten Zwiebeln, Remoulade, Pommes", "price": 8.80 },
-      { "name": "TAXI-Teller (Currywurst, Pommes, kleine Currykrakette und Gyros)", "price": 8.80 },
-      { "name": "TAXI-Teller XL", "price": 10.50 }
+      {
+        "name": "Bratwurst",
+        "price": 3
+      },
+      {
+        "name": "Bratwurst mit Pommes",
+        "price": 5,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Currywurst",
+        "price": 3.5
+      },
+      {
+        "name": "Currywurst mit Pommes",
+        "price": 5.8,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Paprikawurst",
+        "price": 3.7
+      },
+      {
+        "name": "Paprikawurst mit Pommes",
+        "price": 6,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Jägerwurst",
+        "price": 4
+      },
+      {
+        "name": "Jägerwurst mit Pommes",
+        "price": 6.3,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Schlemmerwurst",
+        "price": 7.2
+      },
+      {
+        "name": "Schlemmerwurst mit Currysauce, glasierten Zwiebeln, Remoulade, Pommes",
+        "price": 8.8,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "TAXI-Teller (Currywurst, Pommes, kleine Currykrakette und Gyros)",
+        "price": 8.8,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "TAXI-Teller XL",
+        "price": 10.5
+      }
     ]
   },
   {
     "category": "Pommes Frites & Co",
     "items": [
-      { "name": "Pommes Frites klein", "price": 2.30 },
-      { "name": "Pommes Frites groß", "price": 2.90 },
-      { "name": "Kartoffelkroketten 7 Stück", "price": 2.90 },
-      { "name": "Frikadelle", "price": 3.00 },
-      { "name": "Frikadelle mit Pommes", "price": 5.00 },
-      { "name": "Frikadelle Spezial (mit Schaschliksauce und Röstzwiebeln)", "price": 4.60 },
-      { "name": "Frikadelle Spezial mit Pommes", "price": 6.90 },
-      { "name": "Jäger-Frikadelle (mit Jägersauce)", "price": 4.40 },
-      { "name": "Curry-Frikadelle mit Currysauce", "price": 4.90 },
-      { "name": "Frikadelle \"Hollandaise\"", "price": 5.10 },
-      { "name": "Rahm-Frikadelle mit Rahmsauce", "price": 5.10 },
-      { "name": "Paprika-Frikadelle mit Paprikasauce", "price": 4.10 },
-      { "name": "Schlemmerfrikadelle", "price": 7.80 },
-      { "name": "Hamburger", "price": 2.30 },
-      { "name": "Hamburger \"Spezial\" mit Partysalat", "price": 3.30 },
-      { "name": "Cheeseburger", "price": 2.70 },
-      { "name": "Cheeseburger Doppeldecker", "price": 4.80 },
-      { "name": "Hot Dog", "price": 2.80 },
-      { "name": "Chickenburger", "price": 3.00 },
-      { "name": "Chicken Nuggets 7 Stück", "price": 4.00 }
+      {
+        "name": "Pommes Frites klein",
+        "price": 2.3,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Pommes Frites groß",
+        "price": 2.9,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Kartoffelkroketten 7 Stück",
+        "price": 2.9
+      },
+      {
+        "name": "Frikadelle",
+        "price": 3
+      },
+      {
+        "name": "Frikadelle mit Pommes",
+        "price": 5,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Frikadelle Spezial (mit Schaschliksauce und Röstzwiebeln)",
+        "price": 4.6
+      },
+      {
+        "name": "Frikadelle Spezial mit Pommes",
+        "price": 6.9,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Jäger-Frikadelle (mit Jägersauce)",
+        "price": 4.4
+      },
+      {
+        "name": "Curry-Frikadelle mit Currysauce",
+        "price": 4.9
+      },
+      {
+        "name": "Frikadelle \"Hollandaise\"",
+        "price": 5.1
+      },
+      {
+        "name": "Rahm-Frikadelle mit Rahmsauce",
+        "price": 5.1
+      },
+      {
+        "name": "Paprika-Frikadelle mit Paprikasauce",
+        "price": 4.1
+      },
+      {
+        "name": "Schlemmerfrikadelle",
+        "price": 7.8
+      },
+      {
+        "name": "Hamburger",
+        "price": 2.3
+      },
+      {
+        "name": "Hamburger \"Spezial\" mit Partysalat",
+        "price": 3.3
+      },
+      {
+        "name": "Cheeseburger",
+        "price": 2.7
+      },
+      {
+        "name": "Cheeseburger Doppeldecker",
+        "price": 4.8
+      },
+      {
+        "name": "Hot Dog",
+        "price": 2.8
+      },
+      {
+        "name": "Chickenburger",
+        "price": 3
+      },
+      {
+        "name": "Chicken Nuggets 7 Stück",
+        "price": 4
+      }
     ]
   },
   {
     "category": "Leckere Schnitzel",
     "items": [
-      { "name": "Schnitzel \"Wiener Art\"", "price": 5.50 },
-      { "name": "Schnitzel \"Wiener Art\" mit Pommes", "price": 7.80 },
-      { "name": "Paprikaschnitzel mit Pommes", "price": 8.60 },
-      { "name": "Jägerschnitzel mit Pommes", "price": 8.60 },
-      { "name": "Rahmschnitzel mit Pommes", "price": 7.30 },
-      { "name": "Hawaii-Schnitzel (mit Ananas und Käse überbacken)", "price": 7.10 },
-      { "name": "Hawaii-Schnitzel mit Pommes", "price": 10.00 },
-      { "name": "Zwiebelschnitzel mit Pommes", "price": 7.10 },
-      { "name": "Schnitzel \"Spezial\" (mit Rahmsauce, Käse überbacken und Pommes)", "price": 10.60 },
-      { "name": "Schnitzel \"Hollandaise\" mit Pommes", "price": 9.60 },
-      { "name": "Krüstchen (Schnitzel mit Jägersauce, Spiegelei und Pommes)", "price": 9.90 },
-      { "name": "Spargelschnitzel (mit Spargel, Sauce Hollandaise und Pommes)", "price": 9.90 },
-      { "name": "Metaxa Schnitzel (mit Metaxasauce, Käse überbacken, Pommes und Salat)", "price": 11.50 }
+      {
+        "name": "Schnitzel \"Wiener Art\"",
+        "price": 5.5,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Schnitzel \"Wiener Art\" mit Pommes",
+        "price": 7.8,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Paprikaschnitzel mit Pommes",
+        "price": 8.6,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Jägerschnitzel mit Pommes",
+        "price": 8.6,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Rahmschnitzel mit Pommes",
+        "price": 7.3,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Hawaii-Schnitzel (mit Ananas und Käse überbacken)",
+        "price": 7.1,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Hawaii-Schnitzel mit Pommes",
+        "price": 10,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Zwiebelschnitzel mit Pommes",
+        "price": 7.1,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Schnitzel \"Spezial\" (mit Rahmsauce, Käse überbacken und Pommes)",
+        "price": 10.6,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Schnitzel \"Hollandaise\" mit Pommes",
+        "price": 9.6,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Krüstchen (Schnitzel mit Jägersauce, Spiegelei und Pommes)",
+        "price": 9.9,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Spargelschnitzel (mit Spargel, Sauce Hollandaise und Pommes)",
+        "price": 9.9,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Metaxa Schnitzel (mit Metaxasauce, Käse überbacken, Pommes und Salat)",
+        "price": 11.5,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      }
     ]
   },
   {
     "category": "Hähnchengerichte",
     "items": [
-      { "name": "Hähnchenschnitzel", "price": 4.60 },
-      { "name": "Hähnchenschnitzel mit Pommes", "price": 6.90 },
-      { "name": "Paprikahähnchenschnitzel mit Pommes", "price": 8.10 },
-      { "name": "Jägerhähnchenschnitzel mit Pommes", "price": 8.40 },
-      { "name": "Rahmhähnchen-Schnitzel mit Pommes", "price": 8.70 },
-      { "name": "Hawaii-Hähnchenschnitzel (mit Ananas und Käse überbacken)", "price": 8.70 },
-      { "name": "Zwiebelhähnchenschnitzel mit Pommes", "price": 8.50 }
+      {
+        "name": "Hähnchenschnitzel",
+        "price": 4.6
+      },
+      {
+        "name": "Hähnchenschnitzel mit Pommes",
+        "price": 6.9,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Paprikahähnchenschnitzel mit Pommes",
+        "price": 8.1,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Jägerhähnchenschnitzel mit Pommes",
+        "price": 8.4,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Rahmhähnchen-Schnitzel mit Pommes",
+        "price": 8.7,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Hawaii-Hähnchenschnitzel (mit Ananas und Käse überbacken)",
+        "price": 8.7
+      },
+      {
+        "name": "Zwiebelhähnchenschnitzel mit Pommes",
+        "price": 8.5,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      }
     ]
   },
   {
     "category": "Gyros",
     "items": [
-      { "name": "Gyrosteller komplett (mit Pommes, Krautsalat und Tzatziki)", "price": 11.60, "popular": true, "img": "gyrosteller.webp" },
-      { "name": "Gyros Portion (nur Fleisch)", "price": 5.90 },
-      { "name": "Gyros Portion groß (nur Fleisch)", "price": 7.20 },
-      { "name": "Gyros Pommes", "price": 8.20 },
-      { "name": "Gyros Pommes und Tzatziki überbacken", "price": 9.60 },
-      { "name": "Gyros Pommes und Salat", "price": 10.50 },
-      { "name": "Gyros-Pita (Fladenbrot mit Krautsalat, Salat, Tzatziki, Tomate, Zwiebel)", "price": 5.80, "popular": true, "img": "gyros-pita.webp" },
-      { "name": "Gyros mit Rahmsauce, Käse überbacken, dazu Pommes und Salat", "price": 11.40 },
-      { "name": "Metaxa Gyros (mit Metaxasauce, Käse überbacken, Pommes und Salat)", "price": 11.40 }
+      {
+        "name": "Gyrosteller komplett (mit Pommes, Krautsalat und Tzatziki)",
+        "price": 11.6,
+        "popular": true,
+        "img": "gyrosteller.webp",
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Gyros Portion (nur Fleisch)",
+        "price": 5.9
+      },
+      {
+        "name": "Gyros Portion groß (nur Fleisch)",
+        "price": 7.2
+      },
+      {
+        "name": "Gyros Pommes",
+        "price": 8.2,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Gyros Pommes und Tzatziki überbacken",
+        "price": 9.6,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Gyros Pommes und Salat",
+        "price": 10.5,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Gyros-Pita (Fladenbrot mit Krautsalat, Salat, Tzatziki, Tomate, Zwiebel)",
+        "price": 5.8,
+        "popular": true,
+        "img": "gyros-pita.webp"
+      },
+      {
+        "name": "Gyros mit Rahmsauce, Käse überbacken, dazu Pommes und Salat",
+        "price": 11.4,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      },
+      {
+        "name": "Metaxa Gyros (mit Metaxasauce, Käse überbacken, Pommes und Salat)",
+        "price": 11.4,
+        "sauceOptions": [
+          "Keine Soße",
+          "Ketchup",
+          "Mayo",
+          "Currysauce",
+          "Sauce Hollandaise"
+        ]
+      }
     ]
   },
   {
     "category": "Saucen",
     "items": [
-      { "name": "Currysauce", "price": 0.80 },
-      { "name": "Paprikasauce", "price": 1.10 },
-      { "name": "Jägersauce", "price": 0.80 },
-      { "name": "Schaschliksauce", "price": 0.80 },
-      { "name": "Rahmmajonaise", "price": 1.80 },
-      { "name": "Salatmajonaise", "price": 1.80 },
-      { "name": "Sauce Hollandaise", "price": 1.00 },
-      { "name": "Tzatziki Schlag", "price": 1.00 },
-      { "name": "Portion glasierte Zwiebeln", "price": 0.80 }
+      {
+        "name": "Currysauce",
+        "price": 0.8
+      },
+      {
+        "name": "Paprikasauce",
+        "price": 1.1
+      },
+      {
+        "name": "Jägersauce",
+        "price": 0.8
+      },
+      {
+        "name": "Schaschliksauce",
+        "price": 0.8
+      },
+      {
+        "name": "Rahmmajonaise",
+        "price": 1.8
+      },
+      {
+        "name": "Salatmajonaise",
+        "price": 1.8
+      },
+      {
+        "name": "Sauce Hollandaise",
+        "price": 1
+      },
+      {
+        "name": "Tzatziki Schlag",
+        "price": 1
+      },
+      {
+        "name": "Portion glasierte Zwiebeln",
+        "price": 0.8
+      }
     ]
   },
   {
     "category": "Salate",
     "items": [
-      { "name": "Kartoffelsalat (klein)", "price": 2.70 },
-      { "name": "Kartoffelsalat (groß)", "price": 5.00 },
-      { "name": "Nudelsalat (klein)", "price": 2.70 },
-      { "name": "Nudelsalat (groß)", "price": 5.00 },
-      { "name": "Krautsalat (klein)", "price": 2.70 },
-      { "name": "Krautsalat (groß)", "price": 5.00 },
-      { "name": "Gurkensalat (klein)", "price": 2.70 },
-      { "name": "Gurkensalat (groß)", "price": 5.00 },
-      { "name": "Bohnensalat (klein)", "price": 2.70 },
-      { "name": "Bohnensalat (groß)", "price": 5.00 },
-      { "name": "Partysalat (klein)", "price": 2.70 },
-      { "name": "Partysalat (groß)", "price": 5.00 },
-      { "name": "Blattsalat (klein)", "price": 2.70 },
-      { "name": "Blattsalat (groß)", "price": 5.00 },
-      { "name": "Tzatziki Portion", "price": 2.70 }
+      {
+        "name": "Kartoffelsalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Kartoffelsalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Nudelsalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Nudelsalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Krautsalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Krautsalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Gurkensalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Gurkensalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Bohnensalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Bohnensalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Partysalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Partysalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Blattsalat (klein)",
+        "price": 2.7
+      },
+      {
+        "name": "Blattsalat (groß)",
+        "price": 5
+      },
+      {
+        "name": "Tzatziki Portion",
+        "price": 2.7
+      }
     ]
   }
 ]

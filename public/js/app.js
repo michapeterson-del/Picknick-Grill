@@ -1,7 +1,21 @@
 const state = {
   menu: [],
-  cart: new Map() // name -> { name, price, qty }
+  cart: new Map() // cartKey(name, sauce) -> { name, price, qty, note, sauce }
 };
+
+function cartKey(name, sauce) {
+  return sauce ? `${name}__SAUCE__${sauce}` : name;
+}
+
+function addToCart(item, sauce) {
+  const key = cartKey(item.name, sauce);
+  const existing = state.cart.get(key);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    state.cart.set(key, { name: item.name, price: item.price, qty: 1, note: '', sauce: sauce || '' });
+  }
+}
 
 const CATEGORY_ICONS = {
   'Bratwurst, Pommes & Co': '🌭',
@@ -53,6 +67,12 @@ function renderPopular() {
     const imgTag = item.img
       ? `<img class="thumb" src="/img/${escapeAttr(item.img)}" alt="${escapeAttr(item.name)}" onerror="this.remove()">`
       : '';
+    const addControl = item.sauceOptions
+      ? `<select class="sauce-select-mini">
+          <option value="" selected disabled>Soße wählen</option>
+          ${item.sauceOptions.map((s) => `<option value="${escapeAttr(s)}">${s}</option>`).join('')}
+        </select>`
+      : `<button class="btn-add-mini">In den Warenkorb</button>`;
     card.innerHTML = `
       <div class="thumb-wrap">
         ${imgTag}
@@ -62,7 +82,7 @@ function renderPopular() {
       <div class="body">
         <div class="pname">${item.name}</div>
         <div class="pprice">${money(item.price)}</div>
-        <button class="btn-add-mini">In den Warenkorb</button>
+        ${addControl}
       </div>
     `;
     if (item.img) {
@@ -71,13 +91,22 @@ function renderPopular() {
       img.addEventListener('load', () => fallback.remove());
       img.addEventListener('error', () => img.remove());
     }
-    card.querySelector('.btn-add-mini').onclick = () => {
-      const inCart = state.cart.get(item.name);
-      if (inCart) inCart.qty += 1;
-      else state.cart.set(item.name, { name: item.name, price: item.price, qty: 1 });
-      updateCartBar();
-      renderMenu();
-    };
+    if (item.sauceOptions) {
+      card.querySelector('.sauce-select-mini').onchange = (e) => {
+        const sauce = e.target.value;
+        if (!sauce) return;
+        addToCart(item, sauce);
+        e.target.value = '';
+        updateCartBar();
+        renderMenu();
+      };
+    } else {
+      card.querySelector('.btn-add-mini').onclick = () => {
+        addToCart(item, '');
+        updateCartBar();
+        renderMenu();
+      };
+    }
     scroll.appendChild(card);
   });
 
@@ -106,7 +135,12 @@ function renderMenu() {
         <div class="controls" data-name="${escapeAttr(item.name)}"></div>
       `;
       section.appendChild(row);
-      renderItemControls(row.querySelector('.controls'), item);
+      const controlsEl = row.querySelector('.controls');
+      if (item.sauceOptions) {
+        renderSaucedItemControls(controlsEl, item);
+      } else {
+        renderItemControls(controlsEl, item);
+      }
     });
 
     main.appendChild(section);
@@ -122,7 +156,7 @@ function renderItemControls(el, item) {
   if (!inCart) {
     el.innerHTML = `<button class="btn-add" aria-label="Hinzufügen">+</button>`;
     el.querySelector('.btn-add').onclick = () => {
-      state.cart.set(item.name, { name: item.name, price: item.price, qty: 1, note: '' });
+      addToCart(item, '');
       renderItemControls(el, item);
       updateCartBar();
     };
@@ -146,6 +180,57 @@ function renderItemControls(el, item) {
       updateCartBar();
     };
   }
+}
+
+function renderSaucedItemControls(el, item) {
+  const variants = [];
+  state.cart.forEach((it, key) => {
+    if (it.name === item.name) variants.push({ key, obj: it });
+  });
+
+  el.innerHTML = `
+    <div class="sauce-picker">
+      <select class="sauce-select">
+        <option value="" selected disabled>Soße wählen</option>
+        ${item.sauceOptions.map((s) => `<option value="${escapeAttr(s)}">${s}</option>`).join('')}
+      </select>
+      <div class="sauce-variants"></div>
+    </div>
+  `;
+
+  el.querySelector('.sauce-select').onchange = (e) => {
+    const sauce = e.target.value;
+    if (!sauce) return;
+    addToCart(item, sauce);
+    renderSaucedItemControls(el, item);
+    updateCartBar();
+  };
+
+  const variantsEl = el.querySelector('.sauce-variants');
+  variants.forEach(({ key, obj }) => {
+    const row = document.createElement('div');
+    row.className = 'sauce-variant-row';
+    row.innerHTML = `
+      <span class="variant-label">${obj.sauce}</span>
+      <div class="qty-controls">
+        <button class="minus">−</button>
+        <span class="qty">${obj.qty}</span>
+        <button class="plus">+</button>
+      </div>
+    `;
+    row.querySelector('.plus').onclick = () => {
+      obj.qty += 1;
+      renderSaucedItemControls(el, item);
+      updateCartBar();
+    };
+    row.querySelector('.minus').onclick = () => {
+      obj.qty -= 1;
+      if (obj.qty <= 0) state.cart.delete(key);
+      renderSaucedItemControls(el, item);
+      updateCartBar();
+    };
+    variantsEl.appendChild(row);
+  });
 }
 
 function cartTotal() {
@@ -179,19 +264,20 @@ function renderCartLines() {
   if (state.cart.size === 0) {
     container.innerHTML = '<p style="color:#888">Dein Warenkorb ist leer.</p>';
   }
-  state.cart.forEach((it) => {
+  state.cart.forEach((it, key) => {
     const line = document.createElement('div');
     line.className = 'cart-line-block';
+    const sauceTag = it.sauce ? ` <span class="sauce-tag">🥫 ${it.sauce}</span>` : '';
     line.innerHTML = `
       <div class="cart-line">
-        <span class="name">${it.qty} × ${it.name}</span>
+        <span class="name">${it.qty} × ${it.name}${sauceTag}</span>
         <span class="line-total">${money(it.price * it.qty)}</span>
         <button class="remove" aria-label="Entfernen">×</button>
       </div>
       <input type="text" class="line-note" maxlength="120" placeholder="Notiz zu diesem Artikel, z. B. ohne Zwiebeln" value="${escapeAttr(it.note || '')}">
     `;
     line.querySelector('.remove').onclick = () => {
-      state.cart.delete(it.name);
+      state.cart.delete(key);
       renderMenu();
       updateCartBar();
     };
@@ -236,7 +322,8 @@ async function submitOrder(e) {
   const items = Array.from(state.cart.values()).map((it) => ({
     name: it.name,
     qty: it.qty,
-    note: (it.note || '').trim()
+    note: (it.note || '').trim(),
+    sauce: it.sauce || ''
   }));
 
   const btn = document.getElementById('submitBtn');
