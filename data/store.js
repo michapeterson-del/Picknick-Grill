@@ -1,7 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const ORDERS_FILE = path.join(__dirname, 'orders.json');
+// DATA_DIR zeigt bei Render auf eine dauerhafte Festplatte (Persistent Disk),
+// damit Bestellungen einen Server-Neustart überstehen. Lokal/ohne DATA_DIR
+// wird einfach der data/-Ordner im Projekt verwendet.
+const DATA_DIR = process.env.DATA_DIR || __dirname;
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 
 function load() {
   if (!fs.existsSync(ORDERS_FILE)) {
