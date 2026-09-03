@@ -1,0 +1,25 @@
+{
+  "name": "picknick-grill",
+  "version": "1.0.0",
+  "description": "Bestell-Website für den Picknick-Grill Marienheide mit Admin-Bereich zur Bestätigung von Abholzeiten",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michapeterson-del/Picknick-Grill.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michapeterson-del/Picknick-Grill/issues"
+  },
+  "homepage": "https://github.com/michapeterson-del/Picknick-Grill#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
+  }
+}
