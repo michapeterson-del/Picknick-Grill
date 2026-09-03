@@ -183,54 +183,29 @@ function renderItemControls(el, item) {
 }
 
 function renderSaucedItemControls(el, item) {
-  const variants = [];
-  state.cart.forEach((it, key) => {
-    if (it.name === item.name) variants.push({ key, obj: it });
-  });
-
   el.innerHTML = `
     <div class="sauce-picker">
       <select class="sauce-select">
         <option value="" selected disabled>Soße wählen</option>
         ${item.sauceOptions.map((s) => `<option value="${escapeAttr(s)}">${s}</option>`).join('')}
       </select>
-      <div class="sauce-variants"></div>
+      <span class="sauce-added-hint"></span>
     </div>
   `;
 
-  el.querySelector('.sauce-select').onchange = (e) => {
+  const select = el.querySelector('.sauce-select');
+  const hint = el.querySelector('.sauce-added-hint');
+
+  select.onchange = (e) => {
     const sauce = e.target.value;
     if (!sauce) return;
     addToCart(item, sauce);
-    renderSaucedItemControls(el, item);
     updateCartBar();
+    select.value = '';
+    hint.textContent = `✓ ${sauce} hinzugefügt`;
+    hint.classList.add('show');
+    setTimeout(() => hint.classList.remove('show'), 1600);
   };
-
-  const variantsEl = el.querySelector('.sauce-variants');
-  variants.forEach(({ key, obj }) => {
-    const row = document.createElement('div');
-    row.className = 'sauce-variant-row';
-    row.innerHTML = `
-      <span class="variant-label">${obj.sauce}</span>
-      <div class="qty-controls">
-        <button class="minus">−</button>
-        <span class="qty">${obj.qty}</span>
-        <button class="plus">+</button>
-      </div>
-    `;
-    row.querySelector('.plus').onclick = () => {
-      obj.qty += 1;
-      renderSaucedItemControls(el, item);
-      updateCartBar();
-    };
-    row.querySelector('.minus').onclick = () => {
-      obj.qty -= 1;
-      if (obj.qty <= 0) state.cart.delete(key);
-      renderSaucedItemControls(el, item);
-      updateCartBar();
-    };
-    variantsEl.appendChild(row);
-  });
 }
 
 function cartTotal() {

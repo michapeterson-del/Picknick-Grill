@@ -290,27 +290,17 @@ button {
   margin-top: 8px;
 }
 
-.sauce-variants {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-end;
-}
-
-.sauce-variant-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f4e9db;
-  border-radius: 999px;
-  padding: 2px 4px 2px 12px;
-}
-
-.sauce-variant-row .variant-label {
-  font-size: 0.78rem;
-  color: var(--charcoal-2);
+.sauce-added-hint {
+  font-size: 0.76rem;
+  color: var(--green);
   font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.2s;
   white-space: nowrap;
+}
+
+.sauce-added-hint.show {
+  opacity: 1;
 }
 
 .sauce-tag {
